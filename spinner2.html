@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Editable Student Name Spinner</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f9f9f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+    #spinnerCanvas {
+      border: 5px solid #333;
+      border-radius: 50%;
+      background-color: #fff;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    }
+    #spinBtn, #updateBtn {
+      margin-top: 10px;
+      padding: 12px 25px;
+      font-size: 18px;
+      color: #fff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    #spinBtn:hover, #updateBtn:hover {
+      background-color: #0056b3;
+    }
+    #nameInput {
+      margin-top: 10px;
+      width: 300px;
+      padding: 10px;
+      font-size: 16px;
+      border: 2px solid #ccc;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="spinnerCanvas" width="500" height="500"></canvas>
+  <button id="spinBtn">SPIN</button>
+  <input id="nameInput" placeholder="Enter names separated by commas" />
+  <button id="updateBtn">Update Names</button>
+  <audio id="dingSound" src="https://www.soundjay.com/buttons/sounds/button-3.mp3" preload="auto"></audio>
+
+  <script>
+    let names = [
+      "Alice", "Ben", "Chloe", "David", "Emily",
+      "Felix", "Grace", "Henry", "Isla", "Jack",
+      "Katie", "Liam", "Mia", "Noah", "Olivia",
+      "Peter", "Quinn", "Ryan", "Sophia", "Thomas"
+    ];
+
+    let colors = [];
+    const canvas = document.getElementById('spinnerCanvas');
+    const ctx = canvas.getContext('2d');
+    const spinBtn = document.getElementById('spinBtn');
+    const updateBtn = document.getElementById('updateBtn');
+    const nameInput = document.getElementById('nameInput');
+    const audio = document.getElementById('dingSound');
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const radius = canvas.width / 2;
+    let startAngle = 0;
+    let spinning = false;
+
+    function randomizeColors() {
+      colors = names.map(() => '#' + Math.floor(Math.random()*16777215).toString(16));
+    }
+
+    function drawSpinner() {
+      const arcSize = (2 * Math.PI) / names.length;
+      for (let i = 0; i < names.length; i++) {
+        const angle = startAngle + i * arcSize;
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.arc(centerX, centerY, radius, angle, angle + arcSize);
+        ctx.fillStyle = colors[i];
+        ctx.fill();
+        ctx.stroke();
+        ctx.save();
+        ctx.translate(centerX, centerY);
+        ctx.rotate(angle + arcSize / 2);
+        ctx.textAlign = "right";
+        ctx.fillStyle = "#fff";
+        ctx.font = "bold 16px Arial";
+        ctx.fillText(names[i], radius - 10, 0);
+        ctx.restore();
+      }
+    }
+
+    function spin() {
+      if (spinning) return;
+      spinning = true;
+      let spinVelocity = Math.random() * 0.3 + 0.3;
+      let deceleration = 0.995;
+      const spinInterval = setInterval(() => {
+        startAngle += spinVelocity;
+        spinVelocity *= deceleration;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawSpinner();
+        if (spinVelocity < 0.002) {
+          clearInterval(spinInterval);
+          spinning = false;
+          const degrees = startAngle * (180 / Math.PI);
+          const segmentAngle = 360 / names.length;
+          const index = Math.floor(((360 - (degrees % 360)) % 360) / segmentAngle);
+          alert(`🎉 Selected: ${names[index]}`);
+          audio.play();
+        }
+      }, 20);
+    }
+
+    function updateNames() {
+      const input = nameInput.value.trim();
+      if (input) {
+        names = input.split(',').map(name => name.trim());
+        randomizeColors();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawSpinner();
+      } else {
+        alert("Please enter at least one name.");
+      }
+    }
+
+    spinBtn.addEventListener('click', spin);
+    updateBtn.addEventListener('click', updateNames);
+    randomizeColors();
+    drawSpinner();
+  </script>
+</body>
+</html>
