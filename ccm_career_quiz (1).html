@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCM Health & Natural Sciences Career Path Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .quiz-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 800px;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 24px;
+            color: #1e3c72;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .question-container {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .question-container.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question {
+            font-size: 24px;
+            color: #1e3c72;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .answers {
+            display: grid;
+            gap: 15px;
+        }
+
+        .answer {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .answer:hover {
+            background: #e3f2fd;
+            border-color: #2196f3;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(33, 150, 243, 0.2);
+        }
+
+        .answer.selected {
+            background: #2196f3;
+            border-color: #1976d2;
+            color: white;
+            transform: scale(1.02);
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #e9ecef;
+            margin: 20px 0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #81c784);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn {
+            background: #2196f3;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            min-width: 100px;
+        }
+
+        .btn:hover {
+            background: #1976d2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .results {
+            display: none;
+            text-align: center;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .career-result {
+            background: linear-gradient(135deg, #4caf50 0%, #81c784 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .career-title {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .career-description {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .career-details {
+            background: white;
+            color: #333;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .detail-section {
+            margin-bottom: 20px;
+        }
+
+        .detail-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+
+        .detail-content {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .restart-btn {
+            background: #ff9800;
+            margin-top: 20px;
+        }
+
+        .restart-btn:hover {
+            background: #f57c00;
+        }
+
+        .intro {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .intro h2 {
+            color: #1e3c72;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .intro p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .start-btn {
+            background: #4caf50;
+            font-size: 18px;
+            padding: 15px 30px;
+        }
+
+        .start-btn:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="header">
+            <div class="logo">CCM</div>
+            <h1>County College of Morris</h1>
+            <p>Health Professions & Natural Sciences Career Path Quiz</p>
+        </div>
+
+        <div class="content">
+            <div class="intro" id="intro">
+                <h2>Discover Your Ideal Career Path</h2>
+                <p>This interactive quiz will help you explore various career opportunities in health professions and natural sciences. Answer a series of questions about your interests, strengths, and preferences to discover which career path might be the best fit for you.</p>
+                <p>The quiz takes approximately 5 minutes to complete and will provide you with personalized career recommendations along with educational pathways available at CCM.</p>
+                <button class="btn start-btn" onclick="startQuiz()">Start Quiz</button>
+            </div>
+
+            <div class="quiz-section" id="quiz" style="display: none;">
+                <div class="progress-text">
+                    <span id="progress-text">Question 1 of 10</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+
+                <div class="question-container active" id="question-0">
+                    <div class="question">What type of work environment appeals to you most?</div>
+                    <div class="answers">
+                        <div class="answer" data-value="clinical">Hospital or clinical setting working directly with patients</div>
+                        <div class="answer" data-value="lab">Laboratory environment conducting research and analysis</div>
+                        <div class="answer" data-value="outdoor">Outdoor fieldwork studying natural environments</div>
+                        <div class="answer" data-value="office">Office setting with data analysis and planning</div>
+                    </div>
+                </div>
+
+                <div class="question-container" id="question-1">
+                    <div class="question">Which activity sounds most interesting to you?</div>
+                    <div class="answers">
+                        <div class="answer" data-value="helping">Helping people recover from illness or injury</div>
+                        <div class="answer" data-value="analyzing">Analyzing samples under a microscope</div>
+                        <div class="answer" data-value="researching">Researching environmental conservation methods</div>
+                        <div class="answer" data-value="teaching">Teaching others about health and wellness</div>
+                    </div>
+                </div>
+
+                <div class="question-container" id="question-2">
+                    <div class="question">What are your strongest academic subjects?</div>
+                    <div class="answers">
+                        <div class="answer" data-value="biology">Biology and Anatomy</div>
+                        <div class="answer" data-value="chemistry">Chemistry and Biochemistry</div>
+                        <div class="answer" data-value="math">Mathematics and Statistics</div>
+                        <div class="answer" data-value="communication">Communication and Psychology</div>
+                    </div>
+                </div>
+
+                <div class="question-container" id="question-3">
+                    <div class="question">How do you prefer to work with others?</div>
+                    <div class="answers">
+                        <div class="answer" data-value="team">As part of a healthcare team</div>
+                        <div class="answer" data-value="independent">Independently with minimal supervision</div>
+                        <div class="answer" data-value="collaborative">Collaboratively on research projects</div>
+                        <div class="answer" data-value="leadership">In a leadership or supervisory role</div>
+                    </div>
+                </div>
+
+                <div class="question-container" id="question-4">
+                    <div class="question">What motivates you most in your future career?</div>
+                    <div class="answers">
+                        <div class="answer" data-value="impact">Making a direct impact on people's health</div>
+                        <div class="answer" data-value="discovery">Making scientific discoveries</div>
+                        <div class="answer" data-value="environment">Protecting the environment</div>
+                        <div class="answer" data-value="education">Educating and informing others</div>
+                    </div>
+                </div>
+
+                <div class="question-container" id="question-5">
+                    <div class="question">Which work schedule appeals to you?</div>
+                    <div class="answers">
+                        <div class="answer" data-value="varied">Varied shifts including nights and weekends</div>
+                        <div class="answer" data-value="regular">Regular daytime hours</div>
+                        <div class="answer" data-value="flexible">Flexible hours with project-based work</div>
+                        <div class="answer" data-value="seasonal">Seasonal work with field opportunities</div>
+                    </div>
+                </div>
+
+                <div class="question-container" id="question-6">
+                    <div class="question">How comfortable are you with technology?</div>
+                    <div class="answers">
+                        <div class="answer" data-value="moderate">Moderate use of medical equipment</div>
+                        <div class="answer" data-value="advanced">Advanced laboratory instruments and software</div>
+                        <div class="answer" data-value="basic">Basic computer and communication tools</div>
+                        <div class="answer" data-value="specialized">Specialized environmental monitoring equipment</div>
+                    </div>
+                </div>
+
+                <div class="question-container" id="question-7">
+                    <div class="question">What type of problem-solving do you enjoy most?</div>
+                    <div class="answers">
+                        <div class="answer" data-value="diagnostic">Diagnosing patient conditions</div>
+                        <div class="answer" data-value="analytical">Analyzing complex data and samples</div>
+                        <div class="answer" data-value="environmental">Solving environmental challenges</div>
+                        <div class="answer" data-value="educational">Creating effective learning experiences</div>
+                    </div>
+                </div>
+
+                <div class="question-container" id="question-8">
+                    <div class="question">Which continuing education approach interests you?</div>
+                    <div class="answers">
+                        <div class="answer" data-value="clinical">Clinical training and certifications</div>
+                        <div class="answer" data-value="research">Research publications and conferences</div>
+                        <div class="answer" data-value="fieldwork">Field studies and practical experience</div>
+                        <div class="answer" data-value="professional">Professional development workshops</div>
+                    </div>
+                </div>
+
+                <div class="question-container" id="question-9">
+                    <div class="question">What's your ideal work outcome?</div>
+                    <div class="answers">
+                        <div class="answer" data-value="healing">Helping patients heal and recover</div>
+                        <div class="answer" data-value="innovation">Contributing to scientific innovation</div>
+                        <div class="answer" data-value="conservation">Advancing environmental conservation</div>
+                        <div class="answer" data-value="knowledge">Spreading knowledge and awareness</div>
+                    </div>
+                </div>
+
+                <div class="navigation">
+                    <button class="btn" id="prev-btn" onclick="previousQuestion()" disabled>Previous</button>
+                    <button class="btn" id="next-btn" onclick="nextQuestion()" disabled>Next</button>
+                </div>
+            </div>
+
+            <div class="results" id="results">
+                <div class="career-result">
+                    <div class="career-title" id="career-title">Your Career Match</div>
+                    <div class="career-description" id="career-description">Based on your responses...</div>
+                    <div class="career-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Program at CCM:</div>
+                            <div class="detail-content" id="program-info">Information about the program...</div>
+                        </div>
+                        <div class="detail-section">
+                            <div class="detail-title">Career Outlook:</div>
+                            <div class="detail-content" id="outlook-info">Career outlook information...</div>
+                        </div>
+                        <div class="detail-section">
+                            <div class="detail-title">Next Steps:</div>
+                            <div class="detail-content" id="next-steps">Recommended next steps...</div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn restart-btn" onclick="restartQuiz()">Take Quiz Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestion = 0;
+        let answers = [];
+        const totalQuestions = 10;
+
+        const careers = {
+            nursing: {
+                title: "Nursing",
+                description: "You're well-suited for a career in nursing, where you can make a direct impact on patient care and work as part of a healthcare team.",
+                program: "CCM offers an Associate Degree in Nursing (ADN) program that prepares you for the NCLEX-RN examination. The program includes clinical rotations at local hospitals and healthcare facilities.",
+                outlook: "Nursing is one of the fastest-growing professions with excellent job security. The median salary for registered nurses is approximately $75,000 annually with opportunities for advancement.",
+                steps: "Complete prerequisites including anatomy, physiology, and microbiology. Apply to the nursing program and prepare for clinical experiences. Consider specialization areas like pediatrics, emergency care, or geriatrics."
+            },
+            labtech: {
+                title: "Medical Laboratory Technology",
+                description: "Your analytical skills and interest in laboratory work make you an excellent candidate for medical laboratory technology.",
+                program: "CCM's Medical Laboratory Technology program provides hands-on training in clinical laboratory procedures, including hematology, chemistry, microbiology, and immunology.",
+                outlook: "Medical laboratory technologists are in high demand with a projected 7% job growth. Average salary ranges from $50,000-$65,000 with opportunities in hospitals, clinics, and research facilities.",
+                steps: "Focus on chemistry, biology, and mathematics courses. Gain laboratory experience through the program's clinical rotations. Consider certification through ASCP (American Society for Clinical Pathology)."
+            },
+            environmental: {
+                title: "Environmental Science",
+                description: "Your passion for environmental protection and outdoor work aligns perfectly with a career in environmental science.",
+                program: "CCM's Environmental Science program covers ecology, environmental chemistry, and sustainability practices. Students engage in field studies and research projects.",
+                outlook: "Environmental scientists enjoy diverse career opportunities in government agencies, consulting firms, and non-profit organizations. Median salary is around $60,000 with growth in renewable energy and conservation sectors.",
+                steps: "Build a strong foundation in biology, chemistry, and earth sciences. Participate in field research opportunities and internships. Consider transfer to a four-year institution for advanced degrees."
+            },
+            health_education: {
+                title: "Health Education",
+                description: "Your communication skills and desire to educate others about health make you ideal for health education and promotion.",
+                program: "CCM offers health-related courses that prepare you for transfer to four-year health education programs. Focus on public health, nutrition, and wellness promotion.",
+                outlook: "Health educators work in schools, hospitals, community organizations, and government agencies. The field is growing as preventive care becomes increasingly important. Salaries range from $45,000-$70,000.",
+                steps: "Complete general education requirements and health science courses. Gain experience through internships in community health organizations. Consider pursuing a bachelor's degree in health education or public health."
+            },
+            radiology: {
+                title: "Radiologic Technology",
+                description: "Your technical aptitude and interest in medical imaging make radiologic technology an excellent career choice.",
+                program: "CCM's Radiologic Technology program prepares students to operate imaging equipment and work directly with patients. The program includes extensive clinical training.",
+                outlook: "Radiologic technologists enjoy stable employment with opportunities for specialization in MRI, CT, or mammography. Median salary is approximately $60,000 with excellent benefits.",
+                steps: "Complete anatomy, physiology, and physics prerequisites. Apply for the competitive radiologic technology program. Prepare for ARRT (American Registry of Radiologic Technologists) certification."
+            },
+            respiratory: {
+                title: "Respiratory Therapy",
+                description: "Your interest in helping patients and working with medical technology makes respiratory therapy a great fit.",
+                program: "CCM's Respiratory Therapy program trains students to work with patients who have breathing difficulties. The curriculum includes cardiopulmonary physiology and ventilator management.",
+                outlook: "Respiratory therapists are in high demand, especially with an aging population. Job growth is projected at 19% with median salaries around $60,000.",
+                steps: "Focus on anatomy, physiology, and chemistry. Complete the respiratory therapy program requirements. Prepare for the National Board for Respiratory Care (NBRC) examinations."
+            }
+        };
+
+        function startQuiz() {
+            document.getElementById('intro').style.display = 'none';
+            document.getElementById('quiz').style.display = 'block';
+            updateProgress();
+        }
+
+        function selectAnswer(element) {
+            const container = element.closest('.question-container');
+            const answers = container.querySelectorAll('.answer');
+            
+            answers.forEach(answer => answer.classList.remove('selected'));
+            element.classList.add('selected');
+            
+            const value = element.getAttribute('data-value');
+            answers[currentQuestion] = value;
+            
+            document.getElementById('next-btn').disabled = false;
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < totalQuestions - 1) {
+                document.getElementById(`question-${currentQuestion}`).classList.remove('active');
+                currentQuestion++;
+                document.getElementById(`question-${currentQuestion}`).classList.add('active');
+                updateProgress();
+                updateNavigation();
+            } else {
+                showResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                document.getElementById(`question-${currentQuestion}`).classList.remove('active');
+                currentQuestion--;
+                document.getElementById(`question-${currentQuestion}`).classList.add('active');
+                updateProgress();
+                updateNavigation();
+            }
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / totalQuestions) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+            document.getElementById('progress-text').textContent = `Question ${currentQuestion + 1} of ${totalQuestions}`;
+        }
+
+        function updateNavigation() {
+            document.getElementById('prev-btn').disabled = currentQuestion === 0;
+            document.getElementById('next-btn').disabled = !answers[currentQuestion];
+            
+            if (currentQuestion === totalQuestions - 1) {
+                document.getElementById('next-btn').textContent = 'Get Results';
+            } else {
+                document.getElementById('next-btn').textContent = 'Next';
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quiz').style.display = 'none';
+            document.getElementById('results').classList.add('show');
+            
+            const career = determineCareer();
+            const careerData = careers[career];
+            
+            document.getElementById('career-title').textContent = careerData.title;
+            document.getElementById('career-description').textContent = careerData.description;
+            document.getElementById('program-info').textContent = careerData.program;
+            document.getElementById('outlook-info').textContent = careerData.outlook;
+            document.getElementById('next-steps').textContent = careerData.steps;
+        }
+
+        function determineCareer() {
+            const answerCounts = {};
+            answers.forEach(answer => {
+                answerCounts[answer] = (answerCounts[answer] || 0) + 1;
+            });
+            
+            // Enhanced career matching logic
+            let clinicalScore = 0;
+            let labScore = 0;
+            let environmentalScore = 0;
+            let educationScore = 0;
+            let radiologyScore = 0;
+            let respiratoryScore = 0;
+            
+            answers.forEach(answer => {
+                switch(answer) {
+                    case 'clinical':
+                    case 'helping':
+                    case 'team':
+                    case 'impact':
+                    case 'varied':
+                    case 'diagnostic':
+                    case 'clinical':
+                    case 'healing':
+                        clinicalScore++;
+                        break;
+                    case 'lab':
+                    case 'analyzing':
+                    case 'chemistry':
+                    case 'independent':
+                    case 'discovery':
+                    case 'advanced':
+                    case 'analytical':
+                    case 'research':
+                    case 'innovation':
+                        labScore++;
+                        break;
+                    case 'outdoor':
+                    case 'researching':
+                    case 'math':
+                    case 'environment':
+                    case 'seasonal':
+                    case 'specialized':
+                    case 'environmental':
+                    case 'fieldwork':
+                    case 'conservation':
+                        environmentalScore++;
+                        break;
+                    case 'teaching':
+                    case 'communication':
+                    case 'leadership':
+                    case 'education':
+                    case 'basic':
+                    case 'educational':
+                    case 'professional':
+                    case 'knowledge':
+                        educationScore++;
+                        break;
+                    case 'moderate':
+                        radiologyScore++;
+                        respiratoryScore++;
+                        break;
+                }
+            });
+            
+            const scores = {
+                nursing: clinicalScore,
+                labtech: labScore,
+                environmental: environmentalScore,
+                health_education: educationScore,
+                radiology: radiologyScore,
+                respiratory: respiratoryScore
+            };
+            
+            return Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            answers = [];
+            document.getElementById('results').classList.remove('show');
+            document.getElementById('intro').style.display = 'block';
+            
+            // Reset all questions
+            document.querySelectorAll('.question-container').forEach((container, index) => {
+                container.classList.remove('active');
+                if (index === 0) container.classList.add('active');
+                
+                container.querySelectorAll('.answer').forEach(answer => {
+                    answer.classList.remove('selected');
+                });
+            });
+            
+            updateProgress();
+            updateNavigation();
+        }
+
+        // Add click event listeners to answers
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.answer').forEach(answer => {
+                answer.addEventListener('click', function() {
+                    selectAnswer(this);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
